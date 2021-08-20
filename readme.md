@@ -1,5 +1,5 @@
 # Three.js Starter
-Courtesy of Bruno Simon of https://threejs-journey.xyz/
+Template of the Project is found [here](https://github.com/designcourse/threejs-webpack-starter).
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).

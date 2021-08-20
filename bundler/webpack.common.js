@@ -4,7 +4,11 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/script.js'),
+    entry: {
+        app : path.resolve(__dirname, '../src/script.js'),
+        main : path.resolve(__dirname, '../src/style.css'),
+        index: path.resolve(__dirname, '../src/index.js')
+    },
     output:
     {
         filename: 'bundle.[contenthash].js',
@@ -18,10 +22,20 @@ module.exports = {
                 { from: path.resolve(__dirname, '../static') }
             ]
         }),
+
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html'),
-            minify: true
+            minify: true,
+            chunks: ['main','index']
+
         }),
+        new HtmlWebpackPlugin({
+        filename: 'visualisieren.html',
+        template: './src/visualisieren.html',
+            chunks:['index', 'app']
+
+        }),
+
         new MiniCSSExtractPlugin()
     ],
     module:
@@ -54,35 +68,35 @@ module.exports = {
                 ]
             },
 
-            // Images
-            {
-                test: /\.(jpg|png|gif|svg)$/,
-                use:
-                [
-                    {
-                        loader: 'file-loader',
-                        options:
-                        {
-                            outputPath: 'assets/images/'
-                        }
-                    }
-                ]
-            },
+// Images
+{
+    test: /\.(jpg|png|gif|svg)$/,
+        use:
+    [
+        {
+            loader: 'file-loader',
+            options:
+                {
+                    outputPath: 'assets/images/'
+                }
+        }
+    ]
+},
 
-            // Fonts
-            {
-                test: /\.(ttf|eot|woff|woff2)$/,
-                use:
-                [
-                    {
-                        loader: 'file-loader',
-                        options:
-                        {
-                            outputPath: 'assets/fonts/'
-                        }
-                    }
-                ]
-            }
-        ]
-    }
+// Fonts
+{
+    test: /\.(ttf|eot|woff|woff2)$/,
+        use:
+    [
+        {
+            loader: 'file-loader',
+            options:
+                {
+                    outputPath: 'assets/fonts/'
+                }
+        }
+    ]
+}
+]
+}
 }
