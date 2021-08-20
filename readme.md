@@ -1,5 +1,5 @@
 # Three.js Starter
-Template of the Project is found [here](https://github.com/designcourse/threejs-webpack-starter).
+Template of the Project was taken from [here](https://github.com/designcourse/threejs-webpack-starter).
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
