@@ -1,11 +1,25 @@
-# Three.js Starter
-Template of the Project is found [here](https://github.com/designcourse/threejs-webpack-starter).
+# Web Application for Heightmap WGAN
 
-## Setup
-Download [Node.js](https://nodejs.org/en/download/).
+The template that we used for our project is found [here](https://github.com/designcourse/threejs-webpack-starter).
+
+## Before starting the WebApp
+
+```bash
+# Before you start the WebApp, install tensorflowjs
+pip install tensorflowjs
+
+# After the installation, execute the batchfile
+genTFjs.bat
+
+# This will generate a tensorflow.js model from our WGAN
+# in the static folder called model.json
+```
+
+## How to start the WebApp/Setup
+
 Run this followed commands:
 
-``` bash
+```bash
 # Install dependencies (only the first time)
 npm install
 
