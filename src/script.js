@@ -3,6 +3,34 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import * as tf from '@tensorflow/tfjs';
+
+// Important Link https://stackoverflow.com/questions/50878885/unknown-layer-lambda-in-tensorflowjs-on-browser
+
+async function load_model() {
+  let m = await tf.loadLayersModel('tfModeljs/model.json');
+  return m;
+}
+
+let model = load_model();
+
+model.then(
+  function (res) {
+    const imageData = new ImageData(256, 256);
+    let img = tf.browser.fromPixels(imageData);
+    // img = img.reshape([1, 256, 256, 1]);
+    img = tf.cast(img, 'float32');
+    const output = res.predict(img);
+    let prediction = Array.from(output.dataSync());
+    console.log(prediction);
+  },
+  function (err) {
+    console.log('ERROR');
+    console.log(err);
+  }
+);
+
+// ---------------------------------------------------------------------------
 
 let strDownloadMime = '../static/heightmap.jpg';
 document.getElementById('downloud').addEventListener('blur', () => {
