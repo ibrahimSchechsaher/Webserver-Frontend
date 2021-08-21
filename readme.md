@@ -17,8 +17,6 @@ genTFjs.bat
 
 ## How to start the WebApp/Setup
 
-Run this followed commands:
-
 ```bash
 # Install dependencies (only the first time)
 npm install
