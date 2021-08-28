@@ -3,75 +3,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { HeightMap } from './index.js';
 
-import * as tf from '@tensorflow/tfjs';
-
-// Important Link https://stackoverflow.com/questions/50878885/unknown-layer-lambda-in-tensorflowjs-on-browser
-
-async function load_model() {
-  let m = await tf.loadLayersModel('tfModeljs/model.json');
-  return m;
-}
-
-let model = load_model();
-let imageData;
-
-model.then(
-  function (res) {
-    console.log("prediction");
-    imageData = new ImageData(256, 256);
-    let img = tf.browser.fromPixels(imageData);
-    // img = img.reshape([1, 256, 256, 1]);
-    img = tf.cast(img, 'float32');
-    const output = res.predict(img);
-    let prediction = Array.from(output.dataSync());
-    console.log(prediction);
-
-
-    
-  },
-  function (err) {
-    console.log(err);
-  }
-);
 
 // ---------------------------------------------------------------------------
-
-let strDownloadMime = 'heightmap.jpg';
-document.getElementById('downloud').addEventListener('blur', () => {
-  console.log('im here');
-  let imgData;
-
-  try {
-    let strMime = 'heightmap.jpg';
-    imgData = renderer.domElement.toDataURL(strMime);
-
-    saveFile(imgData.replace(strMime), 'test.jpg');
-    // saveFile(imgData.replace(strMime, strDownloadMime), "test.jpg");
-  } catch (e) {
-    console.log(e);
-    return;
-  }
-});
-let saveFile = function (strData, filename) {
-  let link = document.createElement('a');
-  if (typeof link.download === 'string') {
-    document.body.appendChild(link); //Firefox requires the link to be in the body
-    link.download = filename;
-    link.href = strData;
-    link.click();
-    document.body.removeChild(link); //remove the link when done
-  }
-};
-
-
-import { HeightMap } from './index.js';
 
 // Texture loader
 const loader = new THREE.TextureLoader();
 let height = loader.load('new1.jpg');
-
 const texture = loader.load('orginal.jpg');
+let strDownloadMime = 'heightmap.jpg';
+// const alpha = loader.load ('/alpha.png)
+//console.log(height.toString());
 
 // --- API CALL ------------------------------------------
 
@@ -102,8 +45,40 @@ getJSON('http://127.0.0.1:8000/getHeightMap/');
 
 // ------------------------------------------------------------
 
-// const alpha = loader.load ('/alpha.png)
-//console.log(height.toString());
+
+
+
+document.getElementById('downloud').addEventListener('blur', () => {
+  console.log('im here');
+  let imgData;
+
+  try {
+    let strMime = 'heightmap.jpg';
+    imgData = renderer.domElement.toDataURL(strMime);
+
+    saveFile(imgData.replace(strMime), 'test.jpg');
+    // saveFile(imgData.replace(strMime, strDownloadMime), "test.jpg");
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+});
+let saveFile = function (strData, filename) {
+  let link = document.createElement('a');
+  if (typeof link.download === 'string') {
+    document.body.appendChild(link); //Firefox requires the link to be in the body
+    link.download = filename;
+    link.href = strData;
+    link.click();
+    document.body.removeChild(link); //remove the link when done
+  }
+};
+
+
+
+
+
+
 
 
 
