@@ -13,32 +13,36 @@ async function load_model() {
 }
 
 let model = load_model();
+let imageData;
 
 model.then(
   function (res) {
-    const imageData = new ImageData(256, 256);
+    console.log("prediction");
+    imageData = new ImageData(256, 256);
     let img = tf.browser.fromPixels(imageData);
     // img = img.reshape([1, 256, 256, 1]);
     img = tf.cast(img, 'float32');
     const output = res.predict(img);
     let prediction = Array.from(output.dataSync());
     console.log(prediction);
+
+
+    
   },
   function (err) {
-    console.log('ERROR');
     console.log(err);
   }
 );
 
 // ---------------------------------------------------------------------------
 
-let strDownloadMime = '../static/heightmap.jpg';
+let strDownloadMime = 'heightmap.jpg';
 document.getElementById('downloud').addEventListener('blur', () => {
   console.log('im here');
   let imgData;
 
   try {
-    let strMime = '../static/heightmap.jpg';
+    let strMime = 'heightmap.jpg';
     imgData = renderer.domElement.toDataURL(strMime);
 
     saveFile(imgData.replace(strMime), 'test.jpg');
@@ -62,10 +66,13 @@ import { HeightMap } from './index.js';
 
 // Texture loader
 const loader = new THREE.TextureLoader();
-const height = loader.load('new1.jpg');
+let height = loader.load('new1.jpg');
+
 const texture = loader.load('orginal.jpg');
 // const alpha = loader.load ('/alpha.png)
 console.log(height.toString());
+
+
 
 // Debug
 //const gui = new dat.GUI()
@@ -77,7 +84,7 @@ const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene();
 
 // Objects
-const geometry = new THREE.PlaneBufferGeometry(2.5, 2.5, 64, 64);
+const geometry = new THREE.PlaneBufferGeometry(2.5, 2.5, 256, 256);
 
 // Materials
 const material = new THREE.MeshStandardMaterial({
@@ -215,7 +222,103 @@ const tick = () => {
   renderer.render(scene, camera);
 
   // Call tick again on the next frame
+
   window.requestAnimationFrame(tick);
+
 };
 
 tick();
+
+///////////////////////////////// Hnormal map to height map
+
+
+let heightMap = document.createElement( 'img' );
+heightMap.addEventListener( 'load', onLoad, false );
+heightMap.src = '\\new1.jpg';
+document.body.appendChild( heightMap );
+
+const normalMap = document.createElement( 'canvas' );
+document.body.appendChild( normalMap );
+
+
+
+function onLoad() {
+
+  normalMap.width = heightMap.width;
+  normalMap.height = heightMap.height;
+
+  normalMap.getContext( '2d' ).drawImage( heightMap, 0, 0 );
+
+  height2normal( normalMap );
+
+}
+
+function height2normal( canvas ) {
+
+  var context = canvas.getContext( '2d' );
+
+  var width = canvas.width;
+  var height = canvas.height;
+
+  var src = context.getImageData( 0, 0, width, height );
+  var dst = context.createImageData( width, height );
+
+  for ( var i = 0, l = width * height * 4; i < l; i += 4 ) {
+
+    var x1, x2, y1, y2;
+
+    if ( i % ( width * 4 ) == 0 ) {
+
+      // left edge
+
+      x1 = src.data[ i ];
+      x2 = src.data[ i + 4 ];
+
+    } else if ( i % ( width * 4 ) == ( width - 1 ) * 4 ) {
+
+      // right edge
+
+      x1 = src.data[ i - 4 ];
+      x2 = src.data[ i ];
+
+    } else {
+
+      x1 = src.data[ i - 4 ];
+      x2 = src.data[ i + 4 ];
+
+    }
+
+    if ( i < width * 4 ) {
+
+      // top edge
+
+      y1 = src.data[ i ];
+      y2 = src.data[ i + width * 4 ];
+
+    } else if ( i > width * ( height - 1 ) * 4) {
+
+      // bottom edge
+
+      y1 = src.data[ i - width * 4 ];
+      y2 = src.data[ i ];
+
+    } else {
+
+      y1 = src.data[ i - width * 4 ];
+      y2 = src.data[ i + width * 4 ];
+
+    }
+
+    dst.data[ i ] = ( x1 - x2 ) + 127;
+    dst.data[ i + 1 ] = ( y1 - y2 ) + 127;
+    dst.data[ i + 2 ] = 255;
+    dst.data[ i + 3 ] = 255;
+
+
+  }
+
+  context.putImageData( dst, 0, 0 );
+
+}
+
+onLoad();
