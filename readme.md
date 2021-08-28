@@ -4,16 +4,11 @@ The template that we used for our project is found [here](https://github.com/des
 
 ## Before starting the WebApp
 
-```bash
-# Before you start the WebApp, install tensorflowjs
-pip install tensorflowjs
+Get the Backend for this WebFrontend and start it [here](https://github.com/khoi-ng/Webserver-Backend.git).
 
-# After the installation, execute the batchfile
-genTFjs.bat
+This is important, because the Backend provides the generated Heightmaps for the Frontend.
 
-# This will generate a tensorflow.js model from our WGAN
-# in the static folder called model.json
-```
+After you started the Backend, you can start the Frontend.
 
 ## How to start the WebApp/Setup
 

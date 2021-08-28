@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'dat.gui';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+
 import * as tf from '@tensorflow/tfjs';
 
 // Important Link https://stackoverflow.com/questions/50878885/unknown-layer-lambda-in-tensorflowjs-on-browser
@@ -62,6 +63,8 @@ let saveFile = function (strData, filename) {
     document.body.removeChild(link); //remove the link when done
   }
 };
+
+
 import { HeightMap } from './index.js';
 
 // Texture loader
@@ -69,8 +72,38 @@ const loader = new THREE.TextureLoader();
 let height = loader.load('new1.jpg');
 
 const texture = loader.load('orginal.jpg');
+
+// --- API CALL ------------------------------------------
+
+let getJSON = function (url) {
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'json';
+  xhr.onload = function () {
+    let jsonResponse = xhr.response;
+    console.log(jsonResponse['image']);
+    // https://jsfiddle.net/2pha/p03wfrw4/
+    let image = new Image();
+    image.src = 'data:image/png;base64,' + jsonResponse['image'];
+
+    let imageElement = document.createElement('img');
+    imageElement.src = 'data:image/png;base64,' + jsonResponse['image'];
+    imageElement.onload = function (e) {
+      height = new THREE.Texture(this);
+      height.needsUpdate = true;
+      // TODO:: alte heightmap mit der neuen umtauschen
+    };
+    //document.body.appendChild(imageElement);
+  };
+  xhr.send();
+};
+
+getJSON('http://127.0.0.1:8000/getHeightMap/');
+
+// ------------------------------------------------------------
+
 // const alpha = loader.load ('/alpha.png)
-console.log(height.toString());
+//console.log(height.toString());
 
 
 
