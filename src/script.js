@@ -33,7 +33,6 @@ let getJSON = function (url) {
     imageElement.onload = function (e) {
       height = new THREE.Texture(this);
       height.needsUpdate = true;
-      // TODO:: alte heightmap mit der neuen umtauschen
       init();
     };
     //document.body.appendChild(imageElement);
@@ -55,7 +54,6 @@ function init() {
       imgData = renderer.domElement.toDataURL(strMime);
 
       saveFile(imgData.replace(strMime), 'test.jpg');
-      // saveFile(imgData.replace(strMime, strDownloadMime), "test.jpg");
     } catch (e) {
       console.log(e);
       return;
