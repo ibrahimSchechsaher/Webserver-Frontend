@@ -6,8 +6,8 @@ const path = require('path')
 module.exports = {
     entry: {
         app : path.resolve(__dirname, '../src/script.js'),
-        main : path.resolve(__dirname, '../src/style.css'),
-        index: path.resolve(__dirname, '../src/index.js')
+        main : path.resolve(__dirname, '../src/style.css')
+     //   index: path.resolve(__dirname, '../src/index.js')
     },
     output:
     {
@@ -26,13 +26,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, '../src/index.html'),
             minify: true,
-            chunks: ['main','index']
+            chunks: ['main']
 
         }),
         new HtmlWebpackPlugin({
         filename: 'visualisieren.html',
         template: './src/visualisieren.html',
-            chunks:['index', 'app']
+            chunks:['app']
 
         }),
 
